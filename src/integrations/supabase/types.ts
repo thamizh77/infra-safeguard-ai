@@ -14,16 +14,244 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alerts: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: Database["public"]["Enums"]["severity_level"]
+          status: Database["public"]["Enums"]["alert_status"]
+          title: string
+          updated_at: string
+          violation_id: string | null
+          zone: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity: Database["public"]["Enums"]["severity_level"]
+          status?: Database["public"]["Enums"]["alert_status"]
+          title: string
+          updated_at?: string
+          violation_id?: string | null
+          zone: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: Database["public"]["Enums"]["severity_level"]
+          status?: Database["public"]["Enums"]["alert_status"]
+          title?: string
+          updated_at?: string
+          violation_id?: string | null
+          zone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_violation_id_fkey"
+            columns: ["violation_id"]
+            isOneToOne: false
+            referencedRelation: "violations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      camera_feeds: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean | null
+          location: string
+          name: string
+          stream_url: string | null
+          updated_at: string
+          zone: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          location: string
+          name: string
+          stream_url?: string | null
+          updated_at?: string
+          zone: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          location?: string
+          name?: string
+          stream_url?: string | null
+          updated_at?: string
+          zone?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          mobile: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          mobile?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          mobile?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      violations: {
+        Row: {
+          camera_id: string | null
+          created_at: string
+          detected_at: string
+          id: string
+          screenshot_url: string | null
+          severity: Database["public"]["Enums"]["severity_level"]
+          violation_type: string
+          worker_id: string | null
+          worker_number: string
+          zone: string
+        }
+        Insert: {
+          camera_id?: string | null
+          created_at?: string
+          detected_at?: string
+          id?: string
+          screenshot_url?: string | null
+          severity: Database["public"]["Enums"]["severity_level"]
+          violation_type: string
+          worker_id?: string | null
+          worker_number: string
+          zone: string
+        }
+        Update: {
+          camera_id?: string | null
+          created_at?: string
+          detected_at?: string
+          id?: string
+          screenshot_url?: string | null
+          severity?: Database["public"]["Enums"]["severity_level"]
+          violation_type?: string
+          worker_id?: string | null
+          worker_number?: string
+          zone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "violations_camera_id_fkey"
+            columns: ["camera_id"]
+            isOneToOne: false
+            referencedRelation: "camera_feeds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "violations_worker_id_fkey"
+            columns: ["worker_id"]
+            isOneToOne: false
+            referencedRelation: "workers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workers: {
+        Row: {
+          created_at: string
+          department: string | null
+          id: string
+          name: string
+          status: string | null
+          updated_at: string
+          worker_number: string
+          zone: string | null
+        }
+        Insert: {
+          created_at?: string
+          department?: string | null
+          id?: string
+          name: string
+          status?: string | null
+          updated_at?: string
+          worker_number: string
+          zone?: string | null
+        }
+        Update: {
+          created_at?: string
+          department?: string | null
+          id?: string
+          name?: string
+          status?: string | null
+          updated_at?: string
+          worker_number?: string
+          zone?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      alert_status: "pending" | "resolved" | "ignored"
+      app_role: "admin" | "supervisor" | "user"
+      severity_level: "high" | "medium" | "low"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +378,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      alert_status: ["pending", "resolved", "ignored"],
+      app_role: ["admin", "supervisor", "user"],
+      severity_level: ["high", "medium", "low"],
+    },
   },
 } as const
